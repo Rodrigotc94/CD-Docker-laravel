@@ -36,3 +36,12 @@ steps:
   name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'gcr.io/$PROJECT_ID/app-laravel:$SHORT_SHA']
  
+- id: "adjusting deployment file - k8s "
+  name: 'gcr.io/cloud-builders/gcloud'
+  entrypoint: '/bin/sh' # para conseguir rodar comando
+  #sed serve para substituir no caso tudo que comeca com img-app-deployment. o s# e para indicar que começa
+  args:
+    - '-c'
+    - |
+      sed 's#img-app-deployment#gcr.io/$PROJECT_ID/app-laravel:$SHORT_SHA#g' .k8s/app/deployment.yaml  > k8s/app/deployment-new.yaml;
+      cat k8s/app/deployment-new.yaml;
